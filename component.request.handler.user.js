@@ -10,14 +10,6 @@ module.exports = {
         delegate.register(thisModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             let { username, passphrase, fromhost, fromport } = request.headers;
-            // if (!username){
-            //     request.headers.username = "anonymous";
-            // }
-            // if (!passphrase){
-            //     const { hashedPassphrase, salt } = utils.hashPassphrase("anonymous");
-            //     request.headers.passphrase = hashedPassphrase;
-            //     request.headers.salt = salt;
-            // }
             if(!fromhost || !fromport || !username || !passphrase ){
                 results.statusCode = 200;
                 results.statusMessage = "success";
@@ -26,6 +18,9 @@ module.exports = {
                 results.data = htmlTemplate.replace("[path]", request.path);
                 return results;
             } else {
+                const { hashedPassphrase, salt } = utils.hashPassphrase(passphrase);
+                request.headers.passphrase = hashedPassphrase;
+                request.headers.salt = salt;
                 return await delegate.call(callingModule, request);
             }
         });
