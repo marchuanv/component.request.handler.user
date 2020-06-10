@@ -1,0 +1,32 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <script>
+            const submit = () => {
+                const usernameEle = document.getElementById("username");
+                const passwordEle = document.getElementById("password");
+                const hostEle = document.getElementById("host");
+                const portEle = document.getElementById("port");
+                fetch(`http://${location.host}[path]`, {
+                    method: 'post',
+                    body: JSON.stringify({
+                        username: usernameEle.value,
+                        password: passwordEle.value,
+                        host: hostEle.value,
+                        port: portEle.value,
+                    })
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    ChromeSamples.log('Created Gist:', data.html_url);
+                }); 
+            }
+        </script>
+        <input id="username" type="text" value="username"></input>
+        <input id="password" type="text" value="password"></input>
+        <input id="host" type="text" value="host"></input>
+        <input id="port" type="text" value="port"></input>
+        <input id="" type="button" value="submit" onclick="submit()"></input>
+    </body>
+</html>
