@@ -26,9 +26,8 @@ module.exports = {
                 results.data = htmlTemplate.replace("[path]", request.path);
                 return results;
             } else {
-
+                return await delegate.call(callingModule, request);
             }
-            return await delegate.call(callingModule, request);
         });
         requestHandler.handle({ callingModule: thisModule, port, path });
     }

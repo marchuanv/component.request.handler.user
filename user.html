@@ -9,13 +9,13 @@
                 const hostEle = document.getElementById("host");
                 const portEle = document.getElementById("port");
                 fetch(`http://${location.host}[path]`, {
-                    method: 'post',
-                    body: JSON.stringify({
+                    method: 'POST',
+                    headers: {
                         username: usernameEle.value,
-                        password: passwordEle.value,
-                        host: hostEle.value,
-                        port: portEle.value,
-                    })
+                        passphrase: passwordEle.value,
+                        fromhost: hostEle.value,
+                        fromport: portEle.value 
+                    }
                 }).then(function(response) {
                     return response.json();
                 }).then(function(data) {
