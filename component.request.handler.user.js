@@ -2,7 +2,6 @@ const requestHandler = require("component.request.handler.deferred");
 const delegate = require("component.delegate");
 const fs = require("fs");
 const logging = require("logging");
-const utils = require("utils");
 logging.config.add("Request Handler User");
 const thisModule  = "component.request.handler.user";
 module.exports = { 
@@ -11,9 +10,6 @@ module.exports = {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             let { username, passphrase, fromhost, fromport } = request.headers;
             if( fromhost && !isNaN(fromport) && username && passphrase ) {
-                const { hashedPassphrase, salt } = utils.hashPassphrase(passphrase);
-                request.headers.passphrase = hashedPassphrase;
-                request.headers.salt = salt;
                 request.headers.fromport = Number(fromport);
                 return await delegate.call(callingModule, request);
             } else if ( fromhost && username && passphrase && isNaN(fromport)){
