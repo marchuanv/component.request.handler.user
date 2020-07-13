@@ -7,7 +7,7 @@ module.exports = {
     handle: (callingModule, options = {} ) => {
         delegate.register(thisModule, async (request) => {
             let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromhost, fromport } = request.headers;
-            if ( username && fromhost && !isNaN(fromport) && ( passphrase || ( hashedpassphrase && hashedpassphrasesalt) ) ) {
+            if ( username && fromhost && !isNaN(fromport)) {
                 request.headers.fromhost = fromhost;
                 request.headers.fromport = fromport;
                 request.headers.username = username;
