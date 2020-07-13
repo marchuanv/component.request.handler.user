@@ -1,28 +1,24 @@
 const requestHandler = require("component.request.handler.deferred");
 const delegate = require("component.delegate");
-const fs = require("fs");
 const logging = require("logging");
 logging.config.add("Request Handler User");
 const thisModule  = "component.request.handler.user";
 module.exports = { 
-    handle: ({ callingModule, port, path, loginHtmlFilePath }) => {
+    handle: (callingModule, options = {} ) => {
         delegate.register(thisModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             let { username, passphrase, fromhost, fromport } = request.headers;
-            if( fromhost && !isNaN(fromport) && username && passphrase ) {
-                request.headers.fromport = Number(fromport);
+            if(  ( ( username && passphrase && fromhost && !isNaN(fromport) ) || ( options.username && options.passphrase && options.fromhost && !isNaN(options.fromport) ) )) {
+                request.headers.fromhost = fromhost || options.fromhost;
+                request.headers.fromport = Number(fromport || options.fromport);
+                request.headers.username = username || options.username;
+                request.headers.passphrase = passphrase || options.passphrase;
                 return await delegate.call(callingModule, request);
             } else if ( fromhost && username && passphrase && isNaN(fromport)){
                 results.statusCode = 400;
                 results.statusMessage = "fromport is not a number";
                 results.contentType = "text/plain";
                 results.data = results.statusMessage;
-                return results;
-            } else if (loginHtmlFilePath) {
-                results.statusCode = 200;
-                results.statusMessage = "success";
-                results.contentType = "text/html";
-                results.data = s.readFileSync(loginHtmlFilePath,"utf8");
                 return results;
             } else {
                 results.statusCode = 400;
@@ -32,6 +28,6 @@ module.exports = {
                 return results;
             }
         });
-        requestHandler.handle({ callingModule: thisModule, port, path });
+        requestHandler.handle({ callingModule: thisModule, port: options.port, path: options.path });
     }
 };
