@@ -14,12 +14,6 @@ module.exports = {
                 request.headers.username = username || options.username;
                 request.headers.passphrase = passphrase || options.passphrase;
                 return await delegate.call(callingModule, request);
-            } else if ( fromhost && username && passphrase && isNaN(fromport)){
-                results.statusCode = 400;
-                results.statusMessage = "fromport is not a number";
-                results.contentType = "text/plain";
-                results.data = results.statusMessage;
-                return results;
             } else {
                 results.statusCode = 400;
                 results.statusMessage = "Bad Request";
