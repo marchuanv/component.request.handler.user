@@ -8,11 +8,18 @@ module.exports = {
         delegate.register(thisModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             let { username, passphrase, fromhost, fromport } = request.headers;
-            if(  ( ( username && passphrase && fromhost && !isNaN(fromport) ) || ( options.username && options.passphrase && options.fromhost && !isNaN(options.fromport) ) )) {
-                request.headers.fromhost = fromhost || options.fromhost;
-                request.headers.fromport = Number(fromport || options.fromport);
-                request.headers.username = username || options.username;
-                request.headers.passphrase = passphrase || options.passphrase;
+            if( username && passphrase && fromhost && !isNaN(fromport) ) {
+                request.headers.fromhost = fromhost;
+                request.headers.fromport = fromport;
+                request.headers.username = username;
+                request.headers.passphrase = passphrase;
+                return await delegate.call(callingModule, request);
+            } else if ( options.username && options.hashedPassphrase && options.hashedPassphraseSalt && options.fromhost && !isNaN(options.fromport) ) {
+                request.headers.fromhost = options.fromhost;
+                request.headers.fromport = options.fromport;
+                request.headers.username = options.username;
+                request.headers.hashedPassphrase = options.hashedPassphrase;
+                request.headers.hashedPassphraseSalt = options.hashedPassphraseSalt;
                 return await delegate.call(callingModule, request);
             } else {
                 results.statusCode = 400;
