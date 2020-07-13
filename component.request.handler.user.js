@@ -16,19 +16,18 @@ module.exports = {
                 request.headers.hashedpassphrasesalt = hashedpassphrasesalt;
                 return await delegate.call(callingModule, request);
             } else {
-                const statusMessage = "400 Bad Request";
+                const message = "missing headers: username, fromport, fromhost and passphrase";
                 return { 
                     headers: { 
                         "Content-Type":"text/plain", 
-                        "Content-Length": Buffer.byteLength(statusMessage)
+                        "Content-Length": Buffer.byteLength(message)
                     },
                     statusCode: 400,
-                    statusMessage,
-                    contentType = "text/plain",
-                    data = "missing headers: username, fromport, fromhost and passphrase "
+                    statusMessage: "Bad Request",
+                    data: message
                 };
             }
         });
-        requestHandler.handle({ callingModule: thisModule, port: options.port, path: options.path });
+        requestHandler.handle(thisModule, { port: options.port, path: options.path });
     }
 };
