@@ -2,9 +2,9 @@ const requestHandler = require("component.request.handler.deferred");
 const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler User");
-const thisModule  = "component.request.handler.user";
 module.exports = { 
     handle: (callingModule, options = {} ) => {
+        const thisModule = `component.request.handler.user.${options.path.replace("/","")}`;
         delegate.register(thisModule, async (request) => {
             let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromhost, fromport } = request.headers;
             if ( username && fromhost && !isNaN(fromport)) {
