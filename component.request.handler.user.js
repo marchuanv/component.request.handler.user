@@ -6,7 +6,6 @@ const thisModule  = "component.request.handler.user";
 module.exports = { 
     handle: (callingModule, options = {} ) => {
         delegate.register(thisModule, async (request) => {
-            let results = { headers: {}, statusCode: -1, statusMessage: "" };
             let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromhost, fromport } = request.headers;
             if ( username && fromhost && !isNaN(fromport) && ( passphrase || ( hashedpassphrase && hashedpassphrasesalt) ) ) {
                 request.headers.fromhost = fromhost;
@@ -16,19 +15,18 @@ module.exports = {
                 request.headers.hashedpassphrase = hashedpassphrase;
                 request.headers.hashedpassphrasesalt = hashedpassphrasesalt;
                 return await delegate.call(callingModule, request);
-            } else if ( options.username && options.fromhost && !isNaN(options.fromport) && options.hashedpassphrase && options.hashedpassphrasesalt ) {
-                request.headers.fromhost = options.fromhost;
-                request.headers.fromport = options.fromport;
-                request.headers.username = options.username;
-                request.headers.hashedpassphrase = options.hashedpassphrase;
-                request.headers.hashedpassphrasesalt = options.hashedpassphrasesalt;
-                return await delegate.call(callingModule, request);
             } else {
-                results.statusCode = 400;
-                results.statusMessage = "Bad Request";
-                results.contentType = "text/plain";
-                results.data = "missing headers: username, fromport, fromhost and passphrase ";
-                return results;
+                const statusMessage = "400 Bad Request";
+                return { 
+                    headers: { 
+                        "Content-Type":"text/plain", 
+                        "Content-Length": Buffer.byteLength(statusMessage)
+                    },
+                    statusCode: 400,
+                    statusMessage,
+                    contentType = "text/plain",
+                    data = "missing headers: username, fromport, fromhost and passphrase "
+                };
             }
         });
         requestHandler.handle({ callingModule: thisModule, port: options.port, path: options.path });
