@@ -13,8 +13,8 @@ const delegate = require("component.delegate");
         username: "anonymous", 
         hashedPassphrase: "anonymous", 
         hashedPassphraseSalt:123124124, 
-        fromhost: "localhost", 
-        fromport: 6000 
+        fromHost: "localhost", 
+        fromPort: 6000 
     });
 })().catch((err)=>{
     console.error(err);

@@ -7,18 +7,18 @@ module.exports = {
     handle: (callingModule, options = {} ) => {
         delegate.register(thisModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
-            let { username, passphrase, hashedPassphrase, hashedPassphraseSalt, fromhost, fromport } = request.headers;
-            if ( username && fromhost && !isNaN(fromport) && ( passphrase || ( hashedPassphrase && hashedPassphraseSalt) ) ) {
-                request.headers.fromhost = fromhost;
-                request.headers.fromport = fromport;
+            let { username, passphrase, hashedPassphrase, hashedPassphraseSalt, fromHost, fromPort } = request.headers;
+            if ( username && fromHost && !isNaN(fromPort) && ( passphrase || ( hashedPassphrase && hashedPassphraseSalt) ) ) {
+                request.headers.fromHost = fromHost;
+                request.headers.fromPort = fromPort;
                 request.headers.username = username;
                 request.headers.passphrase = passphrase;
                 request.headers.hashedPassphrase = hashedPassphrase;
                 request.headers.hashedPassphraseSalt = hashedPassphraseSalt;
                 return await delegate.call(callingModule, request);
-            } else if ( options.username && options.fromhost && !isNaN(options.fromport) && options.hashedPassphrase && options.hashedPassphraseSalt ) {
-                request.headers.fromhost = options.fromhost;
-                request.headers.fromport = options.fromport;
+            } else if ( options.username && options.fromHost && !isNaN(options.fromPort) && options.hashedPassphrase && options.hashedPassphraseSalt ) {
+                request.headers.fromHost = options.fromHost;
+                request.headers.fromPort = options.fromPort;
                 request.headers.username = options.username;
                 request.headers.hashedPassphrase = options.hashedPassphrase;
                 request.headers.hashedPassphraseSalt = options.hashedPassphraseSalt;
@@ -27,7 +27,7 @@ module.exports = {
                 results.statusCode = 400;
                 results.statusMessage = "Bad Request";
                 results.contentType = "text/plain";
-                results.data = "missing headers: username, fromport, fromhost and passphrase ";
+                results.data = "missing headers: username, fromPort, fromHost and passphrase ";
                 return results;
             }
         });
