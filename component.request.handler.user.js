@@ -11,11 +11,10 @@ module.exports = {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
             let { username, passphrase, fromhost, fromport } = request.headers;
             if(!fromhost || !fromport || !username || !passphrase ){
-                results.statusCode = 200;
-                results.statusMessage = "success";
-                results.contentType = "text/html";
-                const htmlTemplate = fs.readFileSync(`${__dirname}/user.html`,"utf8");
-                results.data = htmlTemplate.replace("[path]", request.path);
+                results.statusCode = 400;
+                results.statusMessage = "Bad Request";
+                results.contentType = "text/plain";
+                results.data = "missing headers: username, fromport, fromhost and passphrase ";
                 return results;
             } else {
                 const { hashedPassphrase, salt } = utils.hashPassphrase(passphrase);
