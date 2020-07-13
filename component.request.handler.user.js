@@ -7,14 +7,14 @@ module.exports = {
     handle: (callingModule, options = {} ) => {
         delegate.register(thisModule, async (request) => {
             let results = { headers: {}, statusCode: -1, statusMessage: "" };
-            let { username, passphrase, hashedPassphrase, hashedPassphraseSalt, fromHost, fromPort } = request.headers;
+            let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromHost, fromPort } = request.headers;
             if ( username && fromHost && !isNaN(fromPort) && ( passphrase || ( hashedPassphrase && hashedPassphraseSalt) ) ) {
                 request.headers.fromHost = fromHost;
                 request.headers.fromPort = fromPort;
                 request.headers.username = username;
                 request.headers.passphrase = passphrase;
-                request.headers.hashedPassphrase = hashedPassphrase;
-                request.headers.hashedPassphraseSalt = hashedPassphraseSalt;
+                request.headers.hashedPassphrase = hashedpassphrase;
+                request.headers.hashedPassphraseSalt = hashedpassphrasesalt;
                 return await delegate.call(callingModule, request);
             } else if ( options.username && options.fromHost && !isNaN(options.fromPort) && options.hashedPassphrase && options.hashedPassphraseSalt ) {
                 request.headers.fromHost = options.fromHost;
