@@ -16,7 +16,7 @@ module.exports = {
                 request.headers.hashedpassphrasesalt = hashedpassphrasesalt;
                 return await delegate.call(callingModule, request);
             } else {
-                const message = "missing headers: username, fromport, fromhost and passphrase";
+                const message = "missing headers: username, fromport or fromhost";
                 return { 
                     headers: { 
                         "Content-Type":"text/plain", 
