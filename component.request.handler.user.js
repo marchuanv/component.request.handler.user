@@ -28,6 +28,6 @@ module.exports = {
                 };
             }
         });
-        requestHandler.handle(thisModule, { port: options.port, path: options.path });
+        requestHandler.handle(thisModule, {  host: options.host, port: options.port, path: options.path });
     }
 };
