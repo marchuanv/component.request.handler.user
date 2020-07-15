@@ -9,7 +9,7 @@ module.exports = {
             let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromhost, fromport } = request.headers;
             if ( username && fromhost && !isNaN(fromport)) {
                 request.headers.fromhost = fromhost;
-                request.headers.fromport = fromport;
+                request.headers.fromport = Number(fromport);
                 request.headers.username = username;
                 request.headers.passphrase = passphrase;
                 request.headers.hashedpassphrase = hashedpassphrase;
