@@ -4,7 +4,7 @@ const logging = require("logging");
 logging.config.add("Request Handler User");
 module.exports = { 
     handle: (callingModule, options = {} ) => {
-        const thisModule = `component.request.handler.user.${options.path.replace(/\//g,"")}.${port}`;
+        const thisModule = `component.request.handler.user.${options.path.replace(/\//g,"")}.${options.port}`;
         delegate.register(thisModule, async (request) => {
             let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromhost, fromport } = request.headers;
             if ( username && fromhost && !isNaN(fromport)) {
