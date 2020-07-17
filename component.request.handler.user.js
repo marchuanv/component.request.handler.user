@@ -1,4 +1,4 @@
-const requestHandler = require("component.request.handler.deferred");
+const requestHandlerDeferred = require("component.request.handler.deferred");
 const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler User");
@@ -28,6 +28,6 @@ module.exports = {
                 };
             }
         });
-        requestHandler.handle(thisModule, options);
+        requestHandlerDeferred.handle(thisModule, options);
     }
 };
