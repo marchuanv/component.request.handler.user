@@ -3,17 +3,14 @@ const delegate = require("component.delegate");
 const logging = require("logging");
 logging.config.add("Request Handler User");
 module.exports = { 
-    handle: (callingModule, options = {} ) => {
+    handle: (callingModule, options ) => {
         const thisModule = `component.request.handler.user.${options.path.replace(/\//g,"")}.${options.publicPort}`;
         delegate.register(thisModule, async (request) => {
-            let { username, passphrase, hashedpassphrase, hashedpassphrasesalt, fromhost, fromport } = request.headers;
+            let { username, fromhost, fromport } = request.headers;
             if ( username && fromhost && !isNaN(fromport)) {
                 request.headers.fromhost = fromhost;
                 request.headers.fromport = Number(fromport);
                 request.headers.username = username;
-                request.headers.passphrase = passphrase;
-                request.headers.hashedpassphrase = hashedpassphrase;
-                request.headers.hashedpassphrasesalt = hashedpassphrasesalt;
                 return await delegate.call(callingModule, request);
             } else {
                 const message = "missing headers: username, fromport and fromhost";
