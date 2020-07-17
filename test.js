@@ -10,12 +10,7 @@ const delegate = require("component.delegate");
         publicHost: "localhost", 
         publicPort: 80, 
         privateHost: "localhost",
-        privatePort: 3000,
-        username: "anonymous", 
-        hashedPassphrase: "anonymous", 
-        hashedPassphraseSalt: 123124124, 
-        fromHost: "localhost", 
-        fromPort: 6000
+        privatePort: 3000
     });
 })().catch((err)=>{
     console.error(err);
