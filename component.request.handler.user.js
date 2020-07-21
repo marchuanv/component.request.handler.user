@@ -18,15 +18,11 @@ module.exports = {
                         return results;
                     }
                 } else {
-                    const message = "missing headers: username, fromport and fromhost";
                     return { 
-                        headers: { 
-                            "Content-Type":"text/plain", 
-                            "Content-Length": Buffer.byteLength(message)
-                        },
+                        headers: { "Content-Type":"text/plain" },
                         statusCode: 400,
                         statusMessage: "Bad Request",
-                        data: message
+                        data: "missing headers: username, fromport and fromhost"
                     };
                 }
             }
