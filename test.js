@@ -1,11 +1,13 @@
 const requestHandler = require("./component.request.handler.user.js");
 const delegate = require("component.delegate");
 (async()=>{ 
-    const callingModule = "component.request.handler.secure.login";
-    delegate.register(callingModule, () => {
+    delegate.register("component.request.handler.secure", "secure", () => {
         return { statusCode: 200, statusMessage: "Success", headers: {}, data: null };
     });
-    await requestHandler.handle(callingModule, { 
+    delegate.register("component.request.handler.secure.authenticate", "secure", () => {
+        return { statusCode: 200, statusMessage: "Success", headers: {}, data: null };
+    });
+    await requestHandler.handle({ 
         path: "/test", 
         publicHost: "localhost", 
         publicPort: 80, 
