@@ -4,8 +4,8 @@ const logging = require("logging");
 logging.config.add("Request Handler User");
 module.exports = { 
     handle: (options ) => {
-        delegate.register(`component.request.handler.user`, "user", async (request) => {
-            if (options.privatePort === request.privatePort){
+        delegate.register("component.request.handler.user", "user", async (request) => {
+            if (options.publicPort === request.publicPort){
                 let { username, fromhost, fromport } = request.headers;
                 if ( username && fromhost && !isNaN(fromport)) {
                     request.headers.fromhost = fromhost;
