@@ -11,7 +11,7 @@ module.exports = {
                     request.headers.fromhost = fromhost;
                     request.headers.fromport = Number(fromport);
                     request.headers.username = username;
-                    return await delegate.call({context: "component.request.handler.secure.authenticate"}, request);
+                    return await delegate.call({ context: "component.request.handler.secure.authenticate" }, request);
                 } else {
                     return { 
                         headers: { "Content-Type":"text/plain" },
