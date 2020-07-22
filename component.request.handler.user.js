@@ -5,7 +5,7 @@ logging.config.add("Request Handler User");
 module.exports = { 
     handle: (options ) => {
         requestHandlerDeferred.handle(options);
-        delegate.register("component.request.handler.user", "user", async (request) => {
+        delegate.register(`component.request.handler.user.${options.path}`, "user", async (request) => {
             if (options.publicPort === request.publicPort){
                 let { username, fromhost, fromport } = request.headers;
                 if ( username && fromhost && !isNaN(fromport)) {
