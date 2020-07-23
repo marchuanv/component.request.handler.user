@@ -1,10 +1,10 @@
 const requestHandler = require("./component.request.handler.user.js");
 const delegate = require("component.delegate");
 (async()=>{ 
-    delegate.register("component.request.handler.secure", "secure", () => {
+    delegate.register("component.request.handler.secure.authenticate", "80/test", () => {
         return { statusCode: 200, statusMessage: "Success", headers: {}, data: null };
     });
-    delegate.register("component.request.handler.secure.authenticate", "secure", () => {
+    delegate.register("component.request.handler.secure.authenticate", "80/authenticate", () => {
         return { statusCode: 200, statusMessage: "Success", headers: {}, data: null };
     });
     await requestHandler.handle({ 
