@@ -10,7 +10,22 @@ const delegate = require("component.delegate");
         host: "localhost",
         port: 3000
     });
-    await request.send({ host: "localhost", port: 3000, path: "/test", method: "GET", headers: {username: "marchuanv", fromhost: "localhost", fromport: 6000 }, data: "", retryCount: 1  });
+    const results = await request.send({ 
+        host: "localhost", 
+        port: 3000, 
+        path: "/test", 
+        method: "GET", 
+        headers: {
+            username: "marchuanv", 
+            fromhost: "localhost", 
+            fromport: 6000
+        }, 
+        data: "", 
+        retryCount: 1 
+    });
+    if (results.statusCode !== 200){
+        throw new Error("user identification test failed for port 3000");
+    }
 })().catch((err)=>{
     console.error(err);
 });
