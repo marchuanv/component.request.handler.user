@@ -28,12 +28,15 @@ module.exports = {
             
             userSession = userSessions.find(s => s.username === username);
             if (userSession) {
-                return { 
-                    headers: { "Content-Type":"text/plain" },
-                    statusCode: 400,
-                    statusMessage: "Bad Request",
-                    data: "missing sessionid in request header"
-                };
+                const results = await delegate.call({ context: `component.request.handler.secure.authenticate`, name }, {
+                    session: userSession,
+                    headers: request.headers,
+                    data: request.data
+                });
+                if (results && results.headers){
+                    results.headers.sessionid = userSession.Id;
+                }
+                return results;
             }
             if (username && fromhost && !isNaN(fromport)) {
                 userSession = { 
