@@ -21,7 +21,8 @@ module.exports = {
             if (userSession){
                 const results = await delegate.call({ context: `component.request.handler.secure.authenticate`, name }, {
                     session: userSession,
-                    headers: request.headers
+                    headers: request.headers,
+                    data: request.data
                 });
                 results.headers.sessionid = userSession.Id;
                 return results;
@@ -46,7 +47,8 @@ module.exports = {
                 userSessions.push(userSession);
                 const results = await delegate.call({ context: `component.request.handler.secure.authenticate`, name }, {
                     session: userSession,
-                    headers: request.headers
+                    headers: request.headers,
+                    data: request.data
                 });
                 if (results && results.headers){
                     results.headers.sessionid = userSession.Id;
