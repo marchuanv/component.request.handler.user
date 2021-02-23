@@ -9,56 +9,56 @@ const delegate = require("component.delegate");
     });
     await requestHandler.handle(newUnsecureRequest);
 
-    // let results = await unsecureRequest.send({
-    //     host: newUnsecureRequest.host,
-    //     port: newUnsecureRequest.port,
-    //     path: newUnsecureRequest.path,
-    //     method: "GET",
-    //     headers: {
-    //         username: "marchuanv",
-    //         fromhost: "localhost",
-    //         fromport: 6000
-    //     },
-    //     data: ""
-    // });
-    // if (results.statusCode !== 200 || results.statusMessage !== "Test Passed"){
-    //     throw new Error("user identification test failed for port 3000");
-    // }
+    let results = await unsecureRequest.send({
+        host: newUnsecureRequest.host,
+        port: newUnsecureRequest.port,
+        path: newUnsecureRequest.path,
+        method: "GET",
+        headers: {
+            username: "marchuanv",
+            fromhost: "localhost",
+            fromport: 6000
+        },
+        data: ""
+    });
+    if (results.statusCode !== 200 || results.statusMessage !== "Test Passed"){
+        throw new Error("user identification test failed for port 3000");
+    }
    
-    // results = await unsecureRequest.send({
-    //     host: newUnsecureRequest.host,
-    //     port: newUnsecureRequest.port,
-    //     path: newUnsecureRequest.path,
-    //     method: "GET",
-    //     headers: {
-    //         username: "marchuanv",
-    //         fromhost: "localhost",
-    //         fromport: 6000,
-    //         sessionid: results.headers.sessionid
-    //     },
-    //     data: ""
-    // });
-    // if (results.statusCode !== 200 || results.statusMessage !== "Test Passed"){
-    //     throw new Error("user identification test failed for port 3000");
-    // }
+    results = await unsecureRequest.send({
+        host: newUnsecureRequest.host,
+        port: newUnsecureRequest.port,
+        path: newUnsecureRequest.path,
+        method: "GET",
+        headers: {
+            username: "marchuanv",
+            fromhost: "localhost",
+            fromport: 6000,
+            sessionid: results.headers.sessionid
+        },
+        data: ""
+    });
+    if (results.statusCode !== 200 || results.statusMessage !== "Test Passed"){
+        throw new Error("user identification test failed for port 3000");
+    }
     
-    // results = await unsecureRequest.send({
-    //     host: newUnsecureRequest.host,
-    //     port: newUnsecureRequest.port,
-    //     path: newUnsecureRequest.path,
-    //     method: "GET",
-    //     headers: {
-    //         username: "marchuanv",
-    //         fromhost: "localhost",
-    //         fromport: 6000
-    //     },
-    //     data: ""
-    // });
-    // if (results.statusCode !== 400 || results.statusMessage !== "Bad Request"){
-    //     throw new Error("user identification test failed for port 3000");
-    // }
+    results = await unsecureRequest.send({
+        host: newUnsecureRequest.host,
+        port: newUnsecureRequest.port,
+        path: newUnsecureRequest.path,
+        method: "GET",
+        headers: {
+            username: "marchuanv",
+            fromhost: "localhost",
+            fromport: 6000
+        },
+        data: ""
+    });
+    if (results.statusCode !== 400 || results.statusMessage !== "Bad Request"){
+        throw new Error("user identification test failed for port 3000");
+    }
 
-    // process.exit();
+    process.exit();
 
 })().catch((err)=>{
     console.error(err);
