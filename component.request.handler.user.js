@@ -48,7 +48,7 @@ module.exports = {
                     session: userSession,
                     headers: request.headers
                 });
-                if (results){
+                if (results && results.headers){
                     results.headers.sessionid = userSession.Id;
                 }
                 return results;
