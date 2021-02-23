@@ -7,55 +7,35 @@ const delegate = require("component.delegate");
     delegate.register("component.request.handler.secure.authenticate", `${newUnsecureRequest.port}${newUnsecureRequest.path}`, (data) => {
         return { statusCode: 200, statusMessage: "Test Passed", headers: {}, data: "Test Passed" };
     });
-    await requestHandler.handle(newUnsecureRequest);
+    await requestHandler.handle("component.request.handler.secure.authenticate", newUnsecureRequest);
 
+    //User Identification Pass Test
     let results = await unsecureRequest.send({
         host: newUnsecureRequest.host,
         port: newUnsecureRequest.port,
         path: newUnsecureRequest.path,
         method: "GET",
-        headers: {
-            username: "marchuanv",
-            fromhost: "localhost",
-            fromport: 6000
-        },
+        username: "marchuanv",
+        fromhost: "localhost",
+        fromport: 6000,
         data: ""
     });
     if (results.statusCode !== 200 || results.statusMessage !== "Test Passed"){
-        throw new Error("user identification test failed for port 3000");
-    }
-   
-    results = await unsecureRequest.send({
-        host: newUnsecureRequest.host,
-        port: newUnsecureRequest.port,
-        path: newUnsecureRequest.path,
-        method: "GET",
-        headers: {
-            username: "marchuanv",
-            fromhost: "localhost",
-            fromport: 6000,
-            sessionid: results.headers.sessionid
-        },
-        data: ""
-    });
-    if (results.statusCode !== 200 || results.statusMessage !== "Test Passed"){
-        throw new Error("user identification test failed for port 3000");
+        throw new Error("User Identification Pass Test Failed");
     }
     
+    //User Identification Fail Test
     results = await unsecureRequest.send({
         host: newUnsecureRequest.host,
         port: newUnsecureRequest.port,
         path: newUnsecureRequest.path,
         method: "GET",
-        headers: {
-            username: "marchuanv",
-            fromhost: "localhost",
-            fromport: 6000
-        },
+        fromhost: "localhost",
+        fromport: 6000,
         data: ""
     });
     if (results.statusCode !== 400 || results.statusMessage !== "Bad Request"){
-        throw new Error("user identification test failed for port 3000");
+        throw new Error("User Identification Fail Test Failed");
     }
 
     process.exit();
