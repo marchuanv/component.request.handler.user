@@ -19,13 +19,11 @@ module.exports = {
 
             let userSession = userSessions.find(s => s.Id === sessionid);
             if (userSession){
-                const results = await delegate.call({ context: `component.request.handler.secure.authenticate`, name }, {
+                return await delegate.call({ context: `component.request.handler.secure.authenticate`, name }, {
                     session: userSession,
                     headers: request.headers,
                     data: request.data
                 });
-                results.headers.sessionid = userSession.Id;
-                return results;
             }
             
             userSession = userSessions.find(s => s.username === username);
