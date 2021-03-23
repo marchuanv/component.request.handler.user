@@ -1,25 +1,24 @@
-const requestHandlerDeferred = require("component.request.handler.deferred");
-const delegate = require("component.delegate");
-const logging = require("logging");
 const utils = require("utils");
-logging.config.add("Request Handler User");
+const component = require("component");
 const userSessions = [];
-module.exports = { 
-    handle: (context, options) => {
-        requestHandlerDeferred.handle(options);
-        const name = `${options.port}${options.path}`;
-        delegate.register(`component.request.handler.user`, name, async (request) => {
-            
+
+component.register({ moduleName: "component.request.handler.user" }).then( async ({ requestHandlerUser }) => {
+
+    const { config } = await component.load({ moduleName: "component.request.handler.route" });
+    const { routes, port } = config.requestHandlerRoute;
+    for(const route of routes){
+        const name = `${port}${route.path}`;
+        requestHandlerUser.subscribe( { name }, async (request) => {
             let { username, fromhost, fromport, sessionid } = request.headers;
             
             delete request.headers["username"];
             delete request.headers["fromhost"];
             delete request.headers["fromport"];
             delete request.headers["sessionid"];
-
+        
             let userSession = userSessions.find(s => s.Id === sessionid);
             if (userSession){
-                return await delegate.call({ context, name }, {
+                return await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
                     data: request.data
@@ -28,7 +27,7 @@ module.exports = {
             
             userSession = userSessions.find(s => s.username === username);
             if (userSession) {
-                const results = await delegate.call({ context, name }, {
+                const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
                     data: request.data
@@ -46,7 +45,7 @@ module.exports = {
                     username
                 };
                 userSessions.push(userSession);
-                const results = await delegate.call({ context, name }, {
+                const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
                     data: request.data
@@ -64,5 +63,5 @@ module.exports = {
                 };
             }
         });
-    }
-};
+    };
+});
