@@ -1,6 +1,6 @@
 const utils = require("utils");
 const component = require("component");
-const userSessions = [];
+let userSessions = [];
 
 component.register({ moduleName: "component.request.handler.user" }).then( async ({ requestHandlerUser }) => {
 
@@ -18,6 +18,7 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
         
             let userSession = userSessions.find(s => s.Id === sessionid);
             if (userSession){
+                await requestHandlerUser.log(`${userSession.sessionid} found for ${userSession.username}`);
                 return await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
@@ -25,8 +26,15 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
                 });
             }
             
-            userSession = userSessions.find(s => s.username === username);
+            if (userSessions.filter(s => s.username === username).length > 1){
+                await requestHandlerUser.log(`ending older sessions, more than one session found for ${userSession.username}`);
+                const sortedUserSessions = userSession.sort((a, b) => b.date - a.date);
+                userSessions = userSessions.filter(s => s.username === username && s.Id !==  sortedUserSessions[0].Id);
+            }
+
+            userSession = userSessions[0];
             if (userSession) {
+                await requestHandlerUser.log(`${userSession.sessionid} found for ${userSession.username}`);
                 const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
@@ -38,11 +46,13 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
                 return results;
             }
             if (username && fromhost && !isNaN(fromport)) {
+                await requestHandlerUser.log(`creating session for ${username}`);
                 userSession = { 
                     Id: utils.generateGUID(),
                     fromhost,
                     fromport: Number(fromport),
-                    username
+                    username,
+                    date: new Date()
                 };
                 userSessions.push(userSession);
                 const results = await requestHandlerUser.publish({ name }, {
