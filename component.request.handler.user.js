@@ -10,14 +10,8 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
         const name = `${port}${route.path}`;
         const ensureSession = async (request) => {
             let { username, fromhost, fromport, sessionid } = request.headers;
-            
-            delete request.headers["username"];
-            delete request.headers["fromhost"];
-            delete request.headers["fromport"];
-            delete request.headers["sessionid"];
-
             if (!username && sessionid){
-                username = userSessions.find(s => s.Id === sessionid);
+                username = userSessions.find(s => s.Id === sessionid).username;
             }
 
             const hasMultipleSessions = userSessions.filter(s => s.username === username).length > 1;
@@ -29,6 +23,10 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
         
             let userSession = userSessions.find(s => s.username === username); //should only be one session after clearing
             if (userSession){
+                delete request.headers["username"];
+                delete request.headers["fromhost"];
+                delete request.headers["fromport"];
+                delete request.headers["sessionid"];
                 await requestHandlerUser.log(`${userSession.Id} Id found for ${userSession.username}`);
                 const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
@@ -42,14 +40,13 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
             }
 
             if (username && fromhost && !isNaN(fromport)) {
-                userSession = {
+                userSessions.push({
                     Id: utils.generateGUID(),
                     fromhost,
                     fromport: Number(fromport),
                     username,
                     date: new Date()
-                };
-                userSessions.push(userSession);
+                });
                 await requestHandlerUser.log(`session created for ${username}`);
                 return await ensureSession(request);
             }
