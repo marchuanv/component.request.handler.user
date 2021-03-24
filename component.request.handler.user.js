@@ -18,7 +18,7 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
         
             let userSession = userSessions.find(s => s.Id === sessionid);
             if (userSession){
-                await requestHandlerUser.log(`${userSession.sessionid} found for ${userSession.username}`);
+                await requestHandlerUser.log(`${userSession.Id} Id found for ${userSession.username}`);
                 return await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
@@ -34,7 +34,7 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
 
             userSession = userSessions[0];
             if (userSession) {
-                await requestHandlerUser.log(`${userSession.sessionid} found for ${userSession.username}`);
+                await requestHandlerUser.log(`${userSession.Id} Id found for ${userSession.username}`);
                 const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
@@ -46,7 +46,6 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
                 return results;
             }
             if (username && fromhost && !isNaN(fromport)) {
-                await requestHandlerUser.log(`creating session for ${username}`);
                 userSession = { 
                     Id: utils.generateGUID(),
                     fromhost,
@@ -55,6 +54,7 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
                     date: new Date()
                 };
                 userSessions.push(userSession);
+                await requestHandlerUser.log(`session created for ${username}`);
                 const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
