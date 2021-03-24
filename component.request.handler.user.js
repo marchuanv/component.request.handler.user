@@ -27,7 +27,7 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
                 delete request.headers["fromhost"];
                 delete request.headers["fromport"];
                 delete request.headers["sessionid"];
-                await requestHandlerUser.log(`${userSession.Id} Id found for ${userSession.username}`);
+                await requestHandlerUser.log(`session ${userSession.Id} Id found for ${userSession.username}`);
                 const results = await requestHandlerUser.publish({ name }, {
                     session: userSession,
                     headers: request.headers,
