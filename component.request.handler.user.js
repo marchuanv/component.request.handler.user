@@ -50,7 +50,7 @@ component.register({ moduleName: "component.request.handler.user" }).then( async
                 await requestHandlerUser.log(`session created for ${username}`);
                 return await ensureSession(request);
             }
-
+            await requestHandlerUser.log(`failed to find or create session`);
             return { 
                 headers: { "Content-Type":"text/plain" },
                 statusCode: 400,
