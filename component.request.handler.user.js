@@ -2,10 +2,9 @@ const utils = require("utils");
 const component = require("component");
 let userSessions = [];
 
-component.register({ moduleName: "component.request.handler.user" }).then( async ({ requestHandlerUser }) => {
-
-    const { config } = await component.load({ moduleName: "component.request.handler.route" });
-    const { routes, port } = config.requestHandlerRoute;
+component.register(module).then( async ({ requestHandlerUser }) => {
+    const { requestHandlerUserRoute } = await component.register({ moduleName: "component.request.handler.route" });
+    const { routes, port } = requestHandlerUserRoute;
     for(const route of routes){
         const name = `${port}${route.path}`;
         const ensureSession = async (request) => {
