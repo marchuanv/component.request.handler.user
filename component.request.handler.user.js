@@ -3,8 +3,8 @@ const component = require("component");
 let userSessions = [];
 
 component.register(module).then( async ({ requestHandlerUser }) => {
-    const { requestHandlerUserRoute } = await component.register("component.request.handler.route");
-    const { routes, port } = requestHandlerUserRoute;
+    const { requestHandlerRoute } = await component.register("component.request.handler.route");
+    const { routes, port } = requestHandlerRoute;
     for(const route of routes){
         const name = `${port}${route.path}`;
         const ensureSession = async (request) => {
