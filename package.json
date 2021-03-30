@@ -25,9 +25,6 @@
   },
   "component": {
     "channel": 3000,
-    "subscribers": [
-      { "moduleName": "component.request.handler.route" }
-    ],
     "publishers": [
       { "moduleName": "component.request.handler.deferred" }
     ]
