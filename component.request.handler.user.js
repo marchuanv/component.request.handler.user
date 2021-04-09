@@ -27,7 +27,9 @@ component.load(module).then(async({ requestHandlerUser }) => {
             const results = await requestHandlerUser.publish({ channel }, {
                 session: userSession,
                 headers: request.headers,
-                data: request.data
+                data: request.data,
+                path: request.path,
+                requestId: request.Id
             });
             if (results && results.headers){
                 results.headers.sessionid = userSession.Id;
