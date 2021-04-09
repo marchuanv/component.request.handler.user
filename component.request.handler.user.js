@@ -3,7 +3,6 @@ const component = require("component");
 let userSessions = [];
 
 component.load(module).then(async({ requestHandlerUser }) => {
-    const { channel } = requestHandlerUser.config;
     const ensureSession = async (request) => {
         let { username, fromhost, fromport, sessionid } = request.headers;
         if (!username && sessionid){
@@ -24,10 +23,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
             delete request.headers["fromport"];
             delete request.headers["sessionid"];
             await requestHandlerUser.log(`session ${userSession.Id} Id found for ${userSession.username}`);
-            const results = await requestHandlerUser.publish({ channel }, {
-                session: userSession,
-                request
-            });
+            const results = await requestHandlerUser.publish({ session: userSession, request });
             if (results && results.headers) {
                 results.headers.sessionid = userSession.Id;
             }
@@ -53,5 +49,5 @@ component.load(module).then(async({ requestHandlerUser }) => {
             data: "failed to create session, make sure the { username, fromport, fromhost } headers are present."
         };
     };
-    requestHandlerUser.subscribe( { channel }, ensureSession );
+    requestHandlerUser.subscribe(ensureSession);
 });
