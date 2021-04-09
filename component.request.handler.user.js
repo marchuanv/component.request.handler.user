@@ -2,7 +2,7 @@ const utils = require("utils");
 const component = require("component");
 let userSessions = [];
 
-component.register(module).then( async ({ requestHandlerUser }) => {
+component.on({eventName: "moduleregistered"}, async ({ requestHandlerUser }) => {
     const { channel } = requestHandlerUser;
     const ensureSession = async (request) => {
         let { username, fromhost, fromport, sessionid } = request.headers;
@@ -56,3 +56,4 @@ component.register(module).then( async ({ requestHandlerUser }) => {
     };
     requestHandlerUser.subscribe( { channel }, ensureSession );
 });
+component.register(module);
