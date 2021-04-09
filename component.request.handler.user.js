@@ -29,7 +29,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
                 headers: request.headers,
                 data: request.data,
                 path: request.path,
-                requestId: request.Id
+                requestId: request.requestId
             });
             if (results && results.headers){
                 results.headers.sessionid = userSession.Id;
