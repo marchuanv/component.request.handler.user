@@ -3,7 +3,7 @@ const component = require("component");
 let userSessions = [];
 
 component.load(module).then(async({ requestHandlerUser }) => {
-    const { channel } = requestHandlerUser;
+    const { channel } = requestHandlerUser.config;
     const ensureSession = async (request) => {
         let { username, fromhost, fromport, sessionid } = request.headers;
         if (!username && sessionid){
