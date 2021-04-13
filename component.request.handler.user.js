@@ -19,8 +19,16 @@ component.load(module).then(async({ requestHandlerUser }) => {
         let userSession = userSessions.find(s => s.username === username); //should only be one session after clearing
         if (userSession) {
             if (userSession.lastRequestId !== request.requestId) { //new request from the same user
+                if (!userSession.token) { //security layer should have created a session authorisation token by now
+                    return { 
+                        headers: { "Content-Type":"text/plain" },
+                        statusCode: 500,
+                        statusMessage: "Internal Server Error",
+                        data: "failed to create session authorisation token"
+                    };
+                }
                 //need to reassure that the token is still in the headers
-                if (userSession.token !== request.headers.token) { //new token (secure or not secure) should have been created on the session by the security layer
+                if (userSession.token !== request.headers.token) {
                     return {
                         headers: { 
                             "Content-Type":"text/plain"
