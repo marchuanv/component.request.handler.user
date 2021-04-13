@@ -36,7 +36,12 @@ component.load(module).then(async({ requestHandlerUser }) => {
                 fromhost,
                 fromport: Number(fromport),
                 username,
-                date: new Date()
+                date: new Date(),
+                token: null,
+                publicKey: null,
+                privateKey: null,
+                encryptionkey: null,
+                hashedPassphrase: null
             });
             await requestHandlerUser.log(`session created for ${username}`);
             return await ensureSession(request);
