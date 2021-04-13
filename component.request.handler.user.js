@@ -17,11 +17,29 @@ component.load(module).then(async({ requestHandlerUser }) => {
         }
     
         let userSession = userSessions.find(s => s.username === username); //should only be one session after clearing
-        if (userSession){
+        if (userSession) {
+            if (userSession.lastRequestId !== request.requestId) { //new request from the same user
+                //need to reassure that the token is still in the headers
+                if (userSession.token !== request.headers.token) { //new token (secure or not secure) should have been created on the session by the security layer
+                    return {
+                        headers: { 
+                            "Content-Type":"text/plain"
+                        },
+                        statusCode: 400,
+                        statusMessage:"Bad Request",
+                        data: "missing or invalid token in the request headers"
+                    };
+                }
+            }
+            userSession.lastRequestId = request.requestId,
+            
+            //clear headers everything should be on the session
             delete request.headers["username"];
+            delete request.headers["token"];
             delete request.headers["fromhost"];
             delete request.headers["fromport"];
             delete request.headers["sessionid"];
+
             await requestHandlerUser.log(`session ${userSession.Id} Id found for ${userSession.username}`);
             const results = await requestHandlerUser.publish({ session: userSession, request });
             if (results && results.headers) {
@@ -41,7 +59,8 @@ component.load(module).then(async({ requestHandlerUser }) => {
                 publicKey: null,
                 privateKey: null,
                 encryptionkey: null,
-                hashedPassphrase: null
+                hashedPassphrase: null,
+                lastRequestId: request.requestId
             });
             await requestHandlerUser.log(`session created for ${username}`);
             return await ensureSession(request);
