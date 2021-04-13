@@ -24,7 +24,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
                         headers: { "Content-Type":"text/plain" },
                         statusCode: 500,
                         statusMessage: "Internal Server Error",
-                        data: "failed to create session authorisation token"
+                        data: "user session does not have an authorisation token"
                     };
                 }
                 //need to reassure that the token is still in the headers
