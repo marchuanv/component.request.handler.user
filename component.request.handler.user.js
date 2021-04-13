@@ -19,7 +19,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
         let userSession = userSessions.find(s => s.username === username); //should only be one session after clearing
         if (userSession) {
             if (userSession.lastRequestId !== request.requestId) { //new request from the same user
-                if (!userSession.token) { //security layer should have created a session authorisation token by now
+                if (!userSession.token) { //security layer should have created a session authorisation token by now, regardless of secure or not
                     return { 
                         headers: { "Content-Type":"text/plain" },
                         statusCode: 500,
