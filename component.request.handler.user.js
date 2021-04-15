@@ -46,7 +46,8 @@ component.load(module).then(async({ requestHandlerUser }) => {
             return await ensureSession(request);
         }
         await requestHandlerUser.log(`failed to find or create session`);
-        return { 
+        return {
+            success: false,
             headers: { "Content-Type":"text/plain" },
             statusCode: 400,
             statusMessage: "Bad Request",
