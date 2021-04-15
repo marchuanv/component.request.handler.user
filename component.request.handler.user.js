@@ -38,7 +38,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
                 date: new Date(),
                 component: {
                     tracking: {
-                        Id = initialTrackId
+                        Id: initialTrackId
                     }
                 }
             });
