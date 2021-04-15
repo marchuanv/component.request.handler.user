@@ -23,20 +23,20 @@ component.load(module).then(async({ requestHandlerUser }) => {
             delete request.headers["sessionid"];
             await requestHandlerUser.log(`session ${userSession.Id} Id found for ${userSession.username}`);
             const results = await requestHandlerUser.notifyDependantComponents({ session: userSession, request });
-            userSession.lastRequestId = request.requestId;
             if (results && results.headers) {
                 results.headers.sessionid = userSession.Id;
             }
             return results;
         }
         if (username && fromhost && !isNaN(fromport)) {
+            const initialTrackId = requestHandlerUser.getCallstack(null, false)[0];
             userSessions.push({
                 Id: utils.generateGUID(),
                 fromhost,
                 fromport: Number(fromport),
                 username,
                 date: new Date(),
-                lastRequestId: request.requestId
+                trackId: initialTrackId
             });
             await requestHandlerUser.log(`session created for ${username}`);
             return await ensureSession(request);
