@@ -54,5 +54,5 @@ component.load(module).then(async({ requestHandlerUser }) => {
             data: "failed to create session, make sure the { username, fromport, fromhost } headers are present."
         };
     };
-    requestHandlerUser.receiveDependantComponentNotifications(ensureSession);
+    requestHandlerUser.receiveDependantComponentNotifications(null, ensureSession);
 });
