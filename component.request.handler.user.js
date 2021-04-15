@@ -29,7 +29,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
             return results;
         }
         if (username && fromhost && !isNaN(fromport)) {
-            const initialTrackId = requestHandlerUser.getCallstack(null, false)[0];
+            const callstack = await requestHandlerUser.getCallstack();
             userSessions.push({
                 Id: utils.generateGUID(),
                 fromhost,
@@ -38,7 +38,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
                 date: new Date(),
                 component: {
                     tracking: {
-                        Id: initialTrackId
+                        Id: callstack[0].Id
                     }
                 }
             });
