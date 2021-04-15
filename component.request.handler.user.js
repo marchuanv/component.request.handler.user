@@ -36,7 +36,11 @@ component.load(module).then(async({ requestHandlerUser }) => {
                 fromport: Number(fromport),
                 username,
                 date: new Date(),
-                trackId: initialTrackId
+                component: {
+                    tracking: {
+                        Id = initialTrackId
+                    }
+                }
             });
             await requestHandlerUser.log(`session created for ${username}`);
             return await ensureSession(request);
