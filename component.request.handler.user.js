@@ -22,7 +22,7 @@ component.load(module).then(async({ requestHandlerUser }) => {
             delete request.headers["fromport"];
             delete request.headers["sessionid"];
             await requestHandlerUser.log(`session ${userSession.Id} Id found for ${userSession.username}`);
-            const results = await requestHandlerUser.publish({ session: userSession, request });
+            const results = await requestHandlerUser.notifyDependantComponents({ session: userSession, request });
             userSession.lastRequestId = request.requestId;
             if (results && results.headers) {
                 results.headers.sessionid = userSession.Id;
@@ -49,5 +49,5 @@ component.load(module).then(async({ requestHandlerUser }) => {
             data: "failed to create session, make sure the { username, fromport, fromhost } headers are present."
         };
     };
-    requestHandlerUser.subscribe(ensureSession);
+    requestHandlerUser.receiveDependantComponentNotifications(ensureSession);
 });
