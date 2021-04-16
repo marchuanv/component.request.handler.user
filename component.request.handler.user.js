@@ -29,18 +29,14 @@ component.load(module).then(async({ requestHandlerUser }) => {
             return results;
         }
         if (username && fromhost && !isNaN(fromport)) {
-            const callstack = await requestHandlerUser.getCallstack();
+            const { Id } = await requestHandlerUser.getCallstack({});
             userSessions.push({
                 Id: utils.generateGUID(),
                 fromhost,
                 fromport: Number(fromport),
                 username,
                 date: new Date(),
-                component: {
-                    tracking: {
-                        Id: callstack[0].Id
-                    }
-                }
+                component: { tracking: { Id }}
             });
             await requestHandlerUser.log(`session created for ${username}`);
             return await ensureSession(request);
