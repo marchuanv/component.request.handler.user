@@ -3,8 +3,13 @@ const component = require("component");
 let userSessions = [];
 
 component.load(module).then(async({ requestHandlerUser }) => {
-    const ensureSession = async (request) => {
-        let { username, fromhost, fromport, sessionid } = request.headers;
+    const ensureSession = async (messageBusMessage) => {
+        const { headers, data } = messageBusMessage;
+        let { username, fromhost, fromport, sessionid } = headers;
+        delete headers["username"];
+        delete headers["fromhost"];
+        delete headers["fromport"];
+        delete headers["sessionid"];
         if (!username && sessionid){
             username = userSessions.find(s => s.Id === sessionid).username;
         }
@@ -16,30 +21,21 @@ component.load(module).then(async({ requestHandlerUser }) => {
         }
         let userSession = userSessions.find(s => s.username === username); //should only be one session after clearing
         if (userSession) {
-            //clear headers everything should be on the session
-            delete request.headers["username"];
-            delete request.headers["fromhost"];
-            delete request.headers["fromport"];
-            delete request.headers["sessionid"];
+            headers.sessionid = userSession.Id;
             await requestHandlerUser.log(`session ${userSession.Id} Id found for ${userSession.username}`);
-            const results = await requestHandlerUser.notifyDependantComponents({ session: userSession, request });
-            if (results && results.headers) {
-                results.headers.sessionid = userSession.Id;
-            }
-            return results;
+            await requestHandlerUser.publish({ headers, data });
+            return { 
+                success: true,
+                headers,
+                statusCode: 200,
+                statusMessage: "Success",
+                data: "Success"
+            };
         }
         if (username && fromhost && !isNaN(fromport)) {
-            const { Id } = await requestHandlerUser.getCallstack({});
-            userSessions.push({
-                Id: utils.generateGUID(),
-                fromhost,
-                fromport: Number(fromport),
-                username,
-                date: new Date(),
-                component: { tracking: { Id }}
-            });
+            userSessions.push({ Id: utils.generateGUID(), fromhost, fromport: Number(fromport), username, date: new Date() });
             await requestHandlerUser.log(`session created for ${username}`);
-            return await ensureSession(request);
+            return await ensureSession(messageBusMessage);
         }
         await requestHandlerUser.log(`failed to find or create session`);
         return {
@@ -50,5 +46,5 @@ component.load(module).then(async({ requestHandlerUser }) => {
             data: "failed to create session, make sure the { username, fromport, fromhost } headers are present."
         };
     };
-    requestHandlerUser.receiveDependantComponentNotifications(null, ensureSession);
+    requestHandlerUser.subscribe(ensureSession);
 });
